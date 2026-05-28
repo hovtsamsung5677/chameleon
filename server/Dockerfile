@@ -7,6 +7,7 @@ FROM python:3.12.7-slim AS builder
 # Установка системных зависимостей
 RUN apt-get update && apt-get install -y \
   git \
+  build-essential \
   && rm -rf /var/lib/apt/lists/*
 
 # Рабочая директория
@@ -15,7 +16,13 @@ WORKDIR /build
 # Установка setuptools с ограничением версии (для совместимости с torch)
 RUN pip install --no-cache-dir "setuptools<82" wheel
 
+# Отключаем оптимизации NumPy для совместимости со старыми CPU
+ENV NPY_DISABLE_OPTIMIZATION=1
+ENV CFLAGS="-march=x86-64 -mtune=generic -O2"
+
 # Кешируем слой с зависимостями
+# Сначала устанавливаем numpy без бинарных оптимизаций
+RUN pip install --no-cache-dir --no-binary numpy numpy
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -30,6 +37,7 @@ RUN apt-get update && apt-get install -y \
   libsm6 \
   libxext6 \
   libxrender1 \
+  curl \
   && rm -rf /var/lib/apt/lists/*
 
 # Рабочая директория
