@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # MobileSAM Gradio Demo Service
+  mobilesam:
+    build:
+      context: ./MobileSAM
+      dockerfile: Dockerfile
+    image: mobilesam:latest
+    container_name: mobilesam
+    ports:
+      - "7860:7860"
+    environment:
+      - DEVICE=cpu
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./MobileSAM/weights:/app/weights:ro
+    networks:
+      - segmentation-network
+
+  # FastAPI Segmentation Server
+  segment-server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: segment-server:latest
+    container_name: segment-server
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - DEVICE=cpu
+      - MOBILESAM_URL=http://mobilesam:7860/
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./MobileSAM/weights:/app/weights:ro
+    networks:
+      - segmentation-network
+    depends_on:
+      - mobilesam
+
+networks:
+  segmentation-network:
+    driver: bridge
