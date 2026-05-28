@@ -13,7 +13,7 @@ from utils.tools_gradio import fast_process
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the pre-trained model
-sam_checkpoint = "../weights/mobile_sam.pt"
+sam_checkpoint = "/app/weights/mobile_sam.pt"
 model_type = "vit_t"
 
 mobile_sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)

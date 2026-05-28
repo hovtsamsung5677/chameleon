@@ -6,10 +6,10 @@ echo.
 
 REM Проверяем, запущен ли сервер
 echo Проверка сервера...
-powershell -Command "try { $response = Invoke-WebRequest -Uri 'http://localhost:8001/health' -UseBasicParsing -TimeoutSec 2; echo OK } catch { echo FAIL }" | findstr /C:"OK" >nul
+powershell -Command "try { $response = Invoke-WebRequest -Uri 'http://localhost/health' -UseBasicParsing -TimeoutSec 2; echo OK } catch { echo FAIL }" | findstr /C:"OK" >nul
 if errorlevel 1 (
-    echo ОШИБКА: Сервер не запущен на localhost:8001
-    echo Запустите сначала: run_server.bat
+    echo ОШИБКА: Сервер не запущен на localhost
+    echo Запустите сначала: docker-compose up -d
     pause
     exit /b 1
 )
@@ -34,17 +34,17 @@ echo Устройство найдено.
 echo.
 
 REM Делаем проброс портов
-echo Проброс порта 8001 на устройство...
-adb reverse tcp:8001 tcp:8001
+echo Проброс порта 80 на устройство...
+adb reverse tcp:80 tcp:80
 if errorlevel 1 (
     echo ОШИБКА: Не удалось выполнить adb reverse
-    echo Попробуйте вручную: adb reverse tcp:8001 tcp:8001
+    echo Попробуйте вручную: adb reverse tcp:80 tcp:80
     pause
     exit /b 1
 )
 
 echo Порт проброшен успешно!
-echo Теперь на телефоне http://localhost:8001 будет указывать на компьютер
+echo Теперь на телефоне http://localhost будет указывать на компьютер
 echo.
 
 REM Устанавливаем зависимости
@@ -60,11 +60,11 @@ REM Запускаем приложение с localhost
 echo.
 echo ========================================
 echo Запуск приложения...
-echo Сервер: http://localhost:8001 (через ADB reverse)
+echo Сервер: http://localhost (через ADB reverse)
 echo ========================================
 echo.
 
-flutter run --dart-define=SERVER_URL=http://localhost:8001
+flutter run --dart-define=SERVER_URL=http://localhost
 
 if errorlevel 1 (
     echo.

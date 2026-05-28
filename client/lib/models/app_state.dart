@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart' show immutable;
 import 'package:flutter/material.dart';
 import 'selection_tool.dart';
 
@@ -174,8 +173,10 @@ class AppState extends ChangeNotifier {
 
     // Логируем базовую статистику выделения
     final selectedCount = mask.where((p) => p == 1).length;
+    // ignore: avoid_print
     if (selectedCount > 0) {
       print('[Selection] Маска обновлена: выделено $selectedCount пикселей');
+      // ignore: avoid_print
       print(
         '  (Для классификации по яркости нажмите "Превью" или завершите выделение)',
       );

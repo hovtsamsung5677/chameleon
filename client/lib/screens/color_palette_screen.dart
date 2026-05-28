@@ -198,7 +198,7 @@ class _ColorPaletteScreenState extends State<ColorPaletteScreen> {
               final index = entry.key;
               final color = entry.value;
               return _buildMyPaletteColorTile(color, index);
-            }).toList(),
+            }),
             // Empty slots with + button
             ...List.generate(showEmptySlots, (i) => _buildEmptyPaletteSlot()),
           ],
@@ -399,7 +399,7 @@ class _ColorPaletteScreenState extends State<ColorPaletteScreen> {
               final index = entry.key;
               final textureFile = entry.value;
               return _buildTextureTile(textureFile, index);
-            }).toList(),
+            }),
           ],
         ),
       ],
@@ -507,7 +507,7 @@ class _ColorPaletteScreenState extends State<ColorPaletteScreen> {
               final index = entry.key;
               final textureFile = entry.value;
               return _buildMetalTextureTile(textureFile, index);
-            }).toList(),
+            }),
           ],
         ),
       ],
