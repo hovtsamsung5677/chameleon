@@ -8,6 +8,7 @@ opencv-python-headless>=4.8.1.78
 gradio>=4.0.0
 matplotlib>=3.7.0
 numpy>=1.24.3,<1.25.0
+huggingface_hub==0.21.4
 
 # MobileSAM из GitHub (совместимость с оригинальными весами)
 git+https://github.com/ChaoningZhang/MobileSAM.git
