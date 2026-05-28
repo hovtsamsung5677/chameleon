@@ -326,4 +326,4 @@ with gr.Blocks(css=css, title="Faster Segment Anything(MobileSAM)") as demo:
     clear_btn_p.click(clear, outputs=[cond_img_p, segm_img_p])
 
 demo.queue()
-demo.launch()
+demo.launch(server_name="0.0.0.0", server_port=7860)
