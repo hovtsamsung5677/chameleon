@@ -2,7 +2,7 @@
 # ===========================================
 # Этап 1: Сборка
 # ===========================================
-FROM python:3.12.7-slim AS builder
+FROM python:3.9-slim AS builder
 
 # Установка системных зависимостей
 RUN apt-get update && apt-get install -y \
@@ -16,20 +16,14 @@ WORKDIR /build
 # Установка setuptools с ограничением версии (для совместимости с torch)
 RUN pip install --no-cache-dir "setuptools<82" wheel
 
-# Отключаем оптимизации NumPy для совместимости со старыми CPU
-ENV NPY_DISABLE_OPTIMIZATION=1
-ENV CFLAGS="-march=x86-64 -mtune=generic -O2"
-
 # Кешируем слой с зависимостями
-# Сначала устанавливаем numpy без бинарных оптимизаций
-RUN pip install --no-cache-dir --no-binary numpy numpy
 COPY app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # ===========================================
 # Этап 2: Финальный легковесный образ
 # ===========================================
-FROM python:3.12.7-slim AS runtime
+FROM python:3.9-slim AS runtime
 
 # Установка только необходимых системных зависимостей
 RUN apt-get update && apt-get install -y \
@@ -44,7 +38,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Копируем зависимости из builder-этапа
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Копируем код приложения
