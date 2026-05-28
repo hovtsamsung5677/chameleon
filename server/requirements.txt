@@ -3,7 +3,7 @@ uvicorn[standard]>=0.24.0
 python-multipart>=0.0.6
 httpx>=0.25.0
 Pillow>=10.1.0
-numpy==1.24.5
+numpy>=1.24.3,<1.25.0
 # CPU-only версия torch для Docker (без CUDA, для экономии места и скорости сборки)
 --extra-index-url https://download.pytorch.org/whl/cpu
 
