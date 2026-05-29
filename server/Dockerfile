@@ -16,8 +16,8 @@ WORKDIR /build
 # Установка setuptools с ограничением версии (для совместимости с torch)
 RUN pip install --no-cache-dir "setuptools<82" wheel
 
-# Установка CPU-only PyTorch 1.9.0 (совместим с старыми CPU без AVX)
-RUN pip install --no-cache-dir torch==1.9.0+cpu torchvision==0.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+# Установка CPU-only PyTorch (совместим с old CPUs через runtime dispatch)
+RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
 # Кешируем слой с зависимостями
 COPY requirements.txt .
@@ -47,6 +47,9 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Копируем код сервера
 COPY app.py .
 COPY segment_utils.py .
+
+# Отключаем AVX для совместимости со старыми CPU
+ENV ATEN_CPU_CAPABILITY=default
 
 # Создаем непривилегированного пользователя
 RUN useradd --create-home --shell /bin/bash app && \

@@ -84,11 +84,6 @@ class ImageProcessingService {
       }
     }
 
-    print('\n=== SCREEN FILTER RECOLOR (Dark Pixels Only) ===');
-    print('Target color: RGB($targetRed,$targetGreen,$targetBlue)');
-    print('Dark pixels recolored: $darkRecoloredCount');
-    print('==========================================\n');
-
     return Uint8List.fromList(img.encodePng(image));
   }
 
@@ -173,12 +168,13 @@ class ImageProcessingService {
           }
 
           // Count statistics
-          if (isDark)
+          if (isDark) {
             darkCount++;
-          else if (isBright)
+          } else if (isBright) {
             brightCount++;
-          else
+          } else {
             midCount++;
+          }
 
           // Base colorization: use original image luminance to preserve object's shape/shadows
           final gray =
@@ -414,11 +410,6 @@ class ImageProcessingService {
       }
     }
 
-    print('\n=== SCREEN FILTER RECOLOR (All Pixels) ===');
-    print('Target color: RGB($targetRed,$targetGreen,$targetBlue)');
-    print('Pixels recolored: $recoloredCount');
-    print('==========================================\n');
-
     return Uint8List.fromList(img.encodePng(image));
   }
 
@@ -586,11 +577,7 @@ class ImageProcessingService {
     bool isDark,
     bool isBright,
   ) {
-    final colorName = _getColorName(r, g, b);
-    final brightness = isDark ? 'ТЁМНЫЙ' : (isBright ? 'ЯРКИЙ' : 'СРЕДНИЙ');
-    print(
-      '[PixelClassify] x=$x y=$y RGB=($r,$g,$b) Value=${(value * 100).toInt()}% [$brightness] $colorName',
-    );
+    // Debug logging removed for production
   }
 
   /// Log summary statistics after recoloring
@@ -602,24 +589,7 @@ class ImageProcessingService {
     int g,
     int b,
   ) {
-    final total = darkCount + brightCount + midCount;
-    if (total == 0) return;
-
-    final darkPct = (darkCount * 100 / total).toInt();
-    final brightPct = (brightCount * 100 / total).toInt();
-    final midPct = (midCount * 100 / total).toInt();
-
-    print('\n=== RECOLOR SUMMARY ===');
-    print('Target color: RGB($r,$g,$b)');
-    print('Total selected pixels: $total');
-    print(
-      'Dark pixels (<35% brightness): $darkCount ($darkPct%) -> dark strategy',
-    );
-    print(
-      'Bright pixels (>75% brightness): $brightCount ($brightPct%) -> overlay strategy',
-    );
-    print('Medium pixels: $midCount ($midPct%) -> standard blend');
-    print('========================\n');
+    // Debug logging removed for production
   }
 
   /// Simple color name for logging
@@ -1283,14 +1253,6 @@ class ImageProcessingService {
       }
     }
 
-    print('\n=== COLOR FILTERING ===');
-    print('Average color: RGB($avgR,$avgG,$avgB)');
-    print('Tolerance: $tolerance');
-    print('Total selected: $totalSelected');
-    print('Pixels removed: $removedCount');
-    print('Remaining: ${totalSelected - removedCount}');
-    print('========================\n');
-
     return filteredMask;
   }
 
@@ -1408,11 +1370,6 @@ class ImageProcessingService {
         }
       }
     }
-
-    print('\n=== OVERLAY FROM GRAYSCALE RECOLOR (Bright/Medium) ===');
-    print('Target color: RGB($targetRed,$targetGreen,$targetBlue)');
-    print('Pixels recolored: $recoloredCount');
-    print('===================================================\n');
 
     return Uint8List.fromList(img.encodePng(image));
   }

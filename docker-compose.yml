@@ -32,6 +32,7 @@ services:
       - DEVICE=cpu
       - GRADIO_SERVER_NAME=0.0.0.0
       - GRADIO_SERVER_PORT=7860
+      - ATEN_CPU_CAPABILITY=default
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7860/"]
@@ -55,6 +56,7 @@ services:
       - PORT=8001
       - DEVICE=cpu
       - MOBILESAM_URL=http://mobilesam:7860/
+      - ATEN_CPU_CAPABILITY=default
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]

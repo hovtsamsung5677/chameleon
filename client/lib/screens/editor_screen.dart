@@ -504,18 +504,8 @@ class _EditorScreenState extends State<EditorScreen>
         dominantType = 'mixed';
       }
 
-      // Выводим подробный отчёт
-      print('\n' + '=' * 60);
-      print('  АНАЛИЗ ВЫДЕЛЕННОЙ ОБЛАСТИ');
-      print('=' * 60);
-      print('Доминирующий тип: $dominantType');
-      print('Средняя яркость: ${(avgValue * 100).toStringAsFixed(1)}%');
-      print(
-        'Распределение: тёмные=${darkPercent}%, средние=${mediumPercent}%, яркие=${brightPercent}%',
-      );
-      print('Всего пикселей: $totalSelectedPixels');
-      print('=' * 60);
-      print('');
+      // Выводим подробный отчёт (отключено для production)
+      // ignore: avoid_print
 
       // Порог цветового расстояния для фильтрации (в RGB пространстве 0-255)
       // Установлено в 100 - баланс между скоростью и точностью

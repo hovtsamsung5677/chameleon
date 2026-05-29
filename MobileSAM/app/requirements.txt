@@ -1,11 +1,11 @@
-timm>=0.9.2
-opencv-python-headless>=4.8.1.78
+timm>=1.0.0
+opencv-python-headless>=4.10.0
 gradio==3.50.2
 gradio-client==0.6.1
-pydantic==2.4.2
+pydantic>=2.4.2
 matplotlib>=3.7.0
-numpy==1.21.6
-huggingface_hub==0.21.4
+numpy>=1.21.6
+huggingface_hub>=0.21.4
 
 # MobileSAM из GitHub (совместимость с оригинальными весами)
 git+https://github.com/ChaoningZhang/MobileSAM.git
