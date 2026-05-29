@@ -16,6 +16,9 @@ WORKDIR /build
 # Установка setuptools с ограничением версии (для совместимости с torch)
 RUN pip install --no-cache-dir "setuptools<82" wheel
 
+# Установка CPU-only PyTorch 1.9.0 (совместим с старыми CPU без AVX)
+RUN pip install --no-cache-dir torch==1.9.0+cpu torchvision==0.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
 # Кешируем слой с зависимостями
 COPY app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
