@@ -166,27 +166,27 @@ class _EditorScreenState extends State<EditorScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _BottomAction(
-                  child: const _ColorPreviewWidget(),
                   label: 'Цвет',
                   onTap: () => _showColorPicker(context),
+                  child: const _ColorPreviewWidget(),
                 ),
                 const SizedBox(width: 24),
                 _BottomAction(
+                  label: 'Палитра',
+                  onTap: () => _showColorPalette(context),
                   child: const _IconAssetWidget(
                     assetPath: 'assets/icons/Squared_Menu.png',
                     size: 26,
                   ),
-                  label: 'Палитра',
-                  onTap: () => _showColorPalette(context),
                 ),
                 const SizedBox(width: 24),
                 _BottomAction(
+                  label: 'Превью',
+                  onTap: () => _applyRecoloring(context),
                   child: const _IconAssetWidget(
                     assetPath: 'assets/icons/Eye.png',
                     size: 26,
                   ),
-                  label: 'Превью',
-                  onTap: () => _applyRecoloring(context),
                 ),
               ],
             ),

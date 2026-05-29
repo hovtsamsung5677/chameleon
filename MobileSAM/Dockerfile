@@ -16,8 +16,8 @@ WORKDIR /build
 # Установка setuptools с ограничением версии (для совместимости с torch)
 RUN pip install --no-cache-dir "setuptools<82" wheel
 
-# Установка CPU-only PyTorch (совместим с old CPUs через runtime dispatch)
-RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
+# Установка CPU-only PyTorch 1.9.0 (совместим с старыми CPU без AVX)
+RUN pip install --no-cache-dir torch==1.9.0+cpu torchvision==0.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
 # Кешируем слой с зависимостями
 COPY app/requirements.txt .
@@ -48,6 +48,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY app/app.py .
 COPY app/utils ./utils
 COPY app/assets ./assets
+COPY mobile_sam ./mobile_sam
 
 # Отключаем AVX для совместимости со старыми CPU
 ENV ATEN_CPU_CAPABILITY=default
