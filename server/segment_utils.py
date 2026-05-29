@@ -4,6 +4,7 @@
 
 import os
 import sys
+import time
 import urllib.request
 from pathlib import Path
 from typing import Optional, Tuple
@@ -11,6 +12,10 @@ from typing import Optional, Tuple
 import numpy as np
 import torch
 from PIL import Image
+
+# Оптимизация для старых CPU: ограничиваем количество потоков
+torch.set_num_threads(2)
+print(f"PyTorch threads set to: {torch.get_num_threads()}")
 
 # Импорты MobileSAM с несколькими вариантами для совместимости
 _sam_import_error = None
@@ -113,6 +118,7 @@ def load_model(model_type: str = "vit_t", device: Optional[str] = None):
         device = get_device()
 
     print(f"Загрузка модели MobileSAM на устройство: {device}")
+    print(f"Using {torch.get_num_threads()} threads for inference")
 
     # Скачиваем веса если нужно
     weights_path = download_weights()
@@ -121,6 +127,17 @@ def load_model(model_type: str = "vit_t", device: Optional[str] = None):
     mobile_sam = sam_model_registry[model_type](checkpoint=weights_path)
     mobile_sam.to(device=device)
     mobile_sam.eval()
+
+    # Попытка JIT-компиляции для ускорения (только для CPU)
+    if device == "cpu":
+        try:
+            print("Attempting JIT optimization for CPU...")
+            # MobileSAM использует TinyViT, который сложно трассировать
+            # Пробуем torch.jit.script, но отключаем если не работает
+            # mobile_sam = torch.jit.script(mobile_sam)
+            # print("Model JIT compiled successfully")
+        except Exception as e:
+            print(f"JIT optimization skipped: {e}")
 
     # Создаем предиктор
     _predictor = SamPredictor(mobile_sam)
@@ -238,6 +255,8 @@ def segment_image(
     Returns:
         Tuple[np.ndarray, Optional[list]]: (маска, bbox в формате [x1,y1,x2,y2])
     """
+    start_time = time.time()
+    
     # Загружаем модель
     predictor = load_model(device=device)
 
@@ -266,4 +285,7 @@ def segment_image(
     else:
         bbox = None
 
+    elapsed = time.time() - start_time
+    print(f"Segmentation took {elapsed:.2f} seconds")
+    
     return mask.astype(np.uint8), bbox
